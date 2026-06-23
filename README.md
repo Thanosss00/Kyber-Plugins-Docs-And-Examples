@@ -1,6 +1,6 @@
 # Kyber-Plugins-Docs-and-Examples
 >[!NOTE]
->This guide is not the official guide provided by the Kyber Team, you can find their guide [here](https://docs.kyber.gg/g/pluginref). Also this guide is for `ver/beta10`, go [here]() if you are using `stable`.
+>This guide is not the official guide provided by the Kyber Team, you can find their guide [here](https://docs.kyber.gg/g/pluginref). Also this guide is for `ver/beta10`, go [here](https://github.com/Thanosss00/Kyber-Plugins-Docs-And-Examples/tree/stable) if you are using `stable`.
 
 ## How to Make a Kyber Plugin
 First off below is the file structure
