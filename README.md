@@ -1,6 +1,6 @@
 # Kyber-Plugins-Docs-and-Examples
 >[!NOTE]
->This guide is not the official guide provided by the Kyber Team, you can find their guide [here](https://docs.kyber.gg/g/pluginref). Also this guide is for `ver/beta10`, go [here]() if you are using `stable`.
+>This guide is not the official guide provided by the Kyber Team, you can find their guide [here](https://docs.kyber.gg/g/pluginref). Also this guide is for `stable`, go [here](https://github.com/Thanosss00/Kyber-Plugins-Docs-And-Examples) if you are using `ver/beta10`.
 
 ## How to Make a Kyber Plugin
 First off below is the file structure
@@ -1385,4 +1385,4 @@ end
 ```
 
 ## Credits
-[Magix](https://github.com/MagixGames) for the [Official Kyber Docs](https://github.com/ArmchairDevelopers/KyberDocs/tree/feat/plugins-api/content/docs/pluginref) on GitHub and soon on their [website](https://docs.kyber.gg/g/pluginref)./
+[Magix](https://github.com/MagixGames) for the [Official Kyber Docs](https://github.com/ArmchairDevelopers/KyberDocs/tree/feat/plugins-api/content/docs/pluginref) on GitHub and soon on their [website](https://docs.kyber.gg/g/pluginref).
