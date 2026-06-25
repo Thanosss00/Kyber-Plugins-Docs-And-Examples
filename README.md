@@ -199,6 +199,8 @@ local settings = Console.GetSettings("GroupName")
 >Some of these commands work only on the main menu (e.g. `Kyber.DarthVader`, `Kyber.Luke` etc). So I will split them into General Console Commands(these are from the base game), In Game and Main Menu commands.
 
 ## General Console Commands
+- `AutoPlayers.ForceFillGameplayBotsTeam1`
+- `AutoPlayers.ForceFillGameplayBotsTeam2` 
 - `AutoPlayers.HeroSpawnProbability_Gameplay Float32`
 - `AutoPlayers.HeroVehicleSpawnProbability_Gameplay Float32`
 - `AutoPlayers.HeroSpawnProbability Float32`
@@ -1385,4 +1387,4 @@ end
 ```
 
 ## Credits
-[Magix](https://github.com/MagixGames) for the [Official Kyber Docs](https://github.com/ArmchairDevelopers/KyberDocs/tree/feat/plugins-api/content/docs/pluginref) on GitHub and soon on their [website](https://docs.kyber.gg/g/pluginref)./
+[Magix](https://github.com/MagixGames) for the [Official Kyber Docs](https://github.com/ArmchairDevelopers/KyberDocs/tree/feat/plugins-api/content/docs/pluginref) on GitHub and soon on their [website](https://docs.kyber.gg/g/pluginref).
