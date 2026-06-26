@@ -979,6 +979,15 @@ player:SetHealth(200)
 player:SetMaxHealth(300)
 ```
 
+```lua
+player:SetAmmo(integer)
+```
+
+Example:
+```lua
+player:SetAmmo(50)
+```
+
 ## Abilities
 ```lua
 SetAbility(abilityId)
@@ -1024,10 +1033,58 @@ player:Kick("reason")
 Example:
 ```lua
 player:Kick("skill issue")
+```
 
 ## Synced settings
 ```lua
 player:SendSyncedSettings()
+```
+
+## Immortal
+```lua
+player:SetImmortal(boolean)
+```
+
+Example:
+```lua
+player:SetImmortal(true)
+```
+
+```lua
+player:SetFakeImmortal(boolean)
+```
+
+Example:
+```lua
+player:SetFakeImmortal(false)
+```
+
+## Modifiers
+```lua
+player:SetExplosionDamageModifier(float)
+```
+
+Example:
+```lua
+player:SetExplosionDamageModifier(12.3)
+```
+
+```lua
+player:SetMoveSpeedMultiplier(float)
+```
+
+Example:
+```lua
+player:SetMoveSpeedMultiplier(32.1)
+```
+
+```lua
+player:SetCooldownModifier(float)
+```
+
+Example:
+```lua
+player:SetCooldownModifier(1.2)
 ```
 
 ## ServerPlayer fields
@@ -1045,6 +1102,7 @@ player.vehicleEntity     -- Entity
 player.activeKit         -- DataContainer
 player.isBot             -- boolean
 player.isSpawned         -- boolean
+player.isAlive           -- boolean
 ```
 
 # ResourceManager
