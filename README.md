@@ -909,7 +909,8 @@ local bot = PlayerManager.CreatePlayer("Bot1")
 ```
 
 # ServerPlayer
-## Weapons
+## Methods
+### Weapons
 ```lua
 player:SetWeapon("weaponName")
 player:GetWeapon() -- returns the weapon as a DataContainer
@@ -919,7 +920,7 @@ Example:
 player:SetWeapon("Gameplay/Equipment/LongRange/NT242/U_LongRange_NT242")
 ```
 
-## Team & stats
+### Team & stats
 You can change a player's team:
 ```lua
 player:SetTeam(teamId)
@@ -942,7 +943,7 @@ player:SetBattlepoints(500)
 player:GiveBattlepoints(100)
 ```
 
-## Customization
+### Customization
 ```lua
 player:SetCustomizationAsset("assetName")
 ```
@@ -952,7 +953,7 @@ Example:
 player:SetCustomizationAsset("Gameplay/Kits/Hero/Anakin/Kits/Kit_Hero_Anakin")
 ```
 
-## Unlocks
+### Unlocks
 ```lua
 player:SetUnlock("Guid", boolean)
 ```
@@ -962,7 +963,7 @@ Example:
 player:SetUnlock("Guid", true) 
 ```
 
-## Visibility
+### Visibility
 ```lua
 player:SetInvisible(boolean)
 ```
@@ -972,7 +973,7 @@ Example:
 player:SetInvisible(true)
 ```
 
-## Ammo & health
+### Ammo & health
 ```lua
 -- Both arguments are integers
 player:SetHealth(200)
@@ -988,7 +989,7 @@ Example:
 player:SetAmmo(50)
 ```
 
-## Abilities
+### Abilities
 ```lua
 SetAbility(abilityId)
 ```
@@ -997,7 +998,7 @@ Example:
 player:SetAbility("Gameplay/Kits/Hero/Anakin/Abilities/PullDominance/DefaultAbility_Anakin_PullDominance")
 ```
 
-## Chat
+### Chat
 ```lua
 ForceSendChatMessage(channel, message):
 ```
@@ -1015,7 +1016,7 @@ Example:
 player:SendChatMessage("Hello again")
 ```
 
-## Input
+### Input
 ```lua
 SetInputEnabled(actionId, boolean)
 ```
@@ -1025,7 +1026,7 @@ Example:
 player:SetInputEnabled(2, false) -- true to enable, false to disable
 ```
 
-## Kick
+### Kick
 ```lua
 player:Kick("reason")
 ```
@@ -1035,12 +1036,12 @@ Example:
 player:Kick("skill issue")
 ```
 
-## Synced settings
+### Synced settings
 ```lua
 player:SendSyncedSettings()
 ```
 
-## Immortal
+### Immortal
 ```lua
 player:SetImmortal(boolean)
 ```
@@ -1059,7 +1060,7 @@ Example:
 player:SetFakeImmortal(false)
 ```
 
-## Modifiers
+### Modifiers
 ```lua
 player:SetExplosionDamageModifier(float)
 ```
@@ -1087,7 +1088,7 @@ Example:
 player:SetCooldownModifier(1.2)
 ```
 
-## ServerPlayer fields
+## Properties
 ```lua
 player.name              -- string
 player.playerId          -- integer
