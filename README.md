@@ -199,315 +199,293 @@ local settings = Console.GetSettings("GroupName")
 >Some of these commands work only on the main menu (e.g. `Kyber.DarthVader`, `Kyber.Luke` etc). So I will split them into General Console Commands(these are from the base game), In Game and Main Menu commands.
 
 ## General Console Commands
-- `AutoPlayers.ForceFillGameplayBotsTeam1`
-- `AutoPlayers.ForceFillGameplayBotsTeam2` 
-- `AutoPlayers.HeroSpawnProbability_Gameplay Float32`
-- `AutoPlayers.HeroVehicleSpawnProbability_Gameplay Float32`
-- `AutoPlayers.HeroSpawnProbability Float32`
-- `AutoPlayers.HeroVehicleSpawnProbability Float32`
-- `Autoplayers.HeroStrafeProbabilityPerFrame Float32`
-
-- `GameTime.MaxVariableFps Float32`
-
-- `NetworkPerfOverlay.Enable Boolean`
-
-- `PerfOverlay.DrawFps Boolean`
-- `PerfOverlay.DrawGraph Boolean`
-- `PerfOverlay.DrawCpuGraph Boolean`
-- `PerfOverlay.DrawGpuGraph Boolean`
-- `PerfOverlay.DrawFrameGraph Boolean`
-
-- `UIDrawEnable Boolean`
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| AutoPlayers.AllowClientTakeOver | Boolean |
+| AutoPlayers.AllowRandomPathSpread | Boolean |
+| AutoPlayers.ForceFillGameplayBotsTeam1 |
+| AutoPlayers.ForceFillGameplayBotsTeam2 |
+| AutoPlayers.HeroSpawnProbability_Gameplay | Float32 |
+| AutoPlayers.HeroVehicleSpawnProbability_Gameplay | Float32 |
+| AutoPlayers.HeroSpawnProbability | Float32 |
+| AutoPlayers.HeroVehicleSpawnProbability | Float32 |
+| AutoPlayers.HeroStrafeProbabilityPerFrame | Float32 |
+| AutoPlayers.IgnoreHumanPlayers | Boolean |
+| AutoPlayers.RandomPathSpreadRadius | Float32 |
+| AutoPlayers.UpdateAI | Boolean |
+| GameTime.MaxVariableFps | Float32 |
+| GameTime.TimeScale | Float32 |
+| NetworkPerfOverlay.Enable | Boolean |
+| PerfOverlay.DrawFps | Boolean |
+| PerfOverlay.DrawGraph | Boolean |
+| PerfOverlay.DrawCpuGraph | Boolean |
+| PerfOverlay.DrawGpuGraph | Boolean |
+| PerfOverlay.DrawFrameGraph | Boolean |
+| Render.ForceFov | Float32 |
+| Render.ForceOrthoViewEnable | Boolean |
+| UIDrawEnable | Boolean |
+| Worldrender.Viewmode WorldViewMode_Light |
+| Worldrender.Viewmode WorldViewMode_FilmicEffects |
+| Worldrender.Viewmode WorldViewMode_LightSpecular |
+| Worldrender.Viewmode WorldViewMode_LightDiffuse |
+| Worldrender.Viewmode WorldViewMode_Emissive |
 
 ## Kyber Console Commands
 ### In Game Commands
-- `Kyber.addplayer`
-- `Kyber.AddLevel <level> <mode>`
-
-- `Kyber.BundleDebugFontSize Float32`
-
-- `Kyber.countdown`
-- `Kyber.CrashGame`
-- `Kyber.demooverlay`
-- `Kyber.DisableTeamBalancing Boolean`
-
-- `Kyber.endgameteam1`
-- `Kyber.endgameteam2`
-- `Kyber.endofround`
-- `Kyber.eventwelcometimer`
-- `Kyber.EnableLighting1`
-- `Kyber.EnableLighting2`
-- `Kyber.eortest`
-- `Kyber.eor`
-- `Kyber.ExtentDebug`
-- `Kyber.EnableShuffleTeams Boolean`
-- `Kyber.EnableUnlimitedPowerEvent Boolean`
-
-- `Kyber.forcestartevent`
-- `Kyber.FullTeamSwap`
-
-- `Kyber.grid`
-- `Kyber.GiveBattlepoints <player> <amount>`
-- `Kyber.GrantUnlock <player> <guid>`
-
-- `Kyber.HotReloadLua`
-
-- `Kyber.IgnoreControllerError`
-
-- `Kyber.JoinServer <ip> <port>`
-
-- `Kyber.LoadLevel <level> <mode>`
-- `Kyber.LoadSPLevel <level> <startPoint> <initialSubLevel>`
-- `Kyber.LoadSPLevel`
-- `Kyber.LogPlayerStats`
-- `Kyber.LogLastEbxLoad`
-
-- `Kyber.mvpdebug`
-- `Kyber.MaterialID.On`
-- `Kyber.MaterialID.Off`
-
-- `Kyber.outline_off`
-- `Kyber.outline_on`
-- `Kyber.ObjectiveDamageScale`
-
-- `Kyber.PlayerJoinedGroup`
-- `Kyber.PlayerLeftGroup`
-- `Kyber.PlayerCancelled`
-- `Kyber.PlayerManagerAddr`
-- `Kyber.Platform GamePlatform`
-
-- `Kyber.resettimer`
-- `Kyber.resetonboarding`
-- `Kyber.Restart`
-- `Kyber.RevokeUnlock <player> <guid>`
-- `Kyber.RenderBundles Boolean`
-- `Kyber.RenderPropertyDebug Boolean`
-- `Kyber.RenderCameraDebug Boolean`
-
-- `Kyber.startgame`
-- `Kyber.starttimer`
-- `Kyber.safezone`
-- `Kyber.SendStats`
-- `Kyber.SaveLocation`
-- `Kyber.SetTeam <player> <team>`
-- `Kyber.SetTeamByIndex <playerIndex> <team>`
-- `Kyber.SetTeamById <playerId> <team>`
-- `Kyber.ShuffleTeams`
-- `Kyber.SetBattlepoints <player> <amount>`
-- `Kyber.SaveData`
-
-- `Kyber.toggleMusic`
-- `Kyber.toggleVO`
-- `Kyber.toggleAmbience`
-- `Kyber.Teleport <player> <x> <y> <z>`
-- `Kyber.TestSetActive <player> <gpId> <unknown> <vurId> <skinInfoId>`
-- `Kyber.TestUpdateActive <player> <gpId>`
-- `Kyber.TestSetAbility <player> <abilityId> <slot>`
-
-- `Kyber.unused1 Int32`
-- `Kyber.unused2 Int32`
-- `Kyber.unused3 Int32`
-- `Kyber.unused4 Int32`
-
-- `Kyber.VoipMute`
-- `Kyber.VoipListCapturesDevices`
-- `Kyber.VoipSetCaptureDevice <id [from VoipListCaptureDevices]>`
-- `Kyber.VoipSetInputVolume <volume [0-100, default=50, logarithmic/sensitive]>`
-- `Kyber.VoipSetOutputVolume <volume [0-100, default=50, logarithmic/sensitive]>`
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| **Kyber.addplayer** |
+| **Kyber.AddLevel** | <level> <mode> |
+| **Kyber.BundleDebugFontSize** | Float32` |
+| **Kyber.countdown** |
+| **Kyber.CrashGame** |
+| **Kyber.demooverlay** |
+| **Kyber.DisableTeamBalancing** | Boolean |
+| **Kyber.endgameteam1** |
+| **Kyber.endgameteam2** |
+| **Kyber.endofround** |
+| **Kyber.eventwelcometimer** |
+| **Kyber.EnableLighting1** |
+| **Kyber.EnableLighting2** |
+| **Kyber.eortest** |
+| **Kyber.eor** |
+| **Kyber.ExtentDebug** |
+| **Kyber.EnableShuffleTeams Boolean** |
+| **Kyber.EnableUnlimitedPowerEvent** | Boolean |
+| **Kyber.forcestartevent** |
+| **Kyber.FullTeamSwap** |
+| **Kyber.grid** |
+| **Kyber.GiveBattlepoints** | <player> <amount> |
+| **Kyber.GrantUnlock** | <player> <guid> |
+| **Kyber.HotReloadLua** |
+| **Kyber.IgnoreControllerError** |
+| **Kyber.JoinServer** | <ip> <port> |
+| **Kyber.LoadLevel** | <level> <mode> |
+| **Kyber.LoadSPLevel** | <level> <startPoint> <initialSubLevel> |
+| **Kyber.LoadSPLevel** |
+| **Kyber.LogPlayerStats** |
+| **Kyber.LogLastEbxLoad** |
+| **Kyber.mvpdebug** |
+| **Kyber.MaterialID.On** |
+| **Kyber.MaterialID.Off** |
+| **Kyber.outline_off** |
+| **Kyber.outline_on** |
+| **Kyber.ObjectiveDamageScale** |
+| **Kyber.PlayerJoinedGroup** |
+| **Kyber.PlayerLeftGroup** |
+| **Kyber.PlayerCancelled** |
+| **Kyber.PlayerManagerAddr** |
+| **Kyber.Platform GamePlatform** |
+| **Kyber.resettimer** |
+| **Kyber.resetonboarding** |
+| **Kyber.Restart** |
+| **Kyber.RevokeUnlock** | <player> <guid> |
+| **Kyber.RenderBundles** | Boolean |
+| **Kyber.RenderPropertyDebug** | Boolean |
+| **Kyber.RenderCameraDebug** | Boolean |
+| **Kyber.startgame** |
+| **Kyber.starttimer** |
+| **Kyber.safezone** |
+| **Kyber.SendStats** |
+| **Kyber.SaveLocation** |
+| **Kyber.SetTeam** | <player> <team> |
+| **Kyber.SetTeamByIndex** | <playerIndex> <team> |
+| **Kyber.SetTeamById** | <playerId> <team> |
+| **Kyber.ShuffleTeams** |
+| **Kyber.SetBattlepoints** | <player> <amount> |
+| **Kyber.SaveData** |
+| **Kyber.toggleMusic** |
+| **Kyber.toggleVO** |
+| **Kyber.toggleAmbience** |
+| **Kyber.Teleport** | <player> <x> <y> <z> |
+| **Kyber.TestSetActive** | <player> <gpId> <unknown> <vurId> <skinInfoId> |
+| **Kyber.TestUpdateActive** | <player> <gpId> |
+| **Kyber.TestSetAbility** | <player> <abilityId> <slot> |
+| **Kyber.unused1** | Int32 |
+| **Kyber.unused2** | Int32 |
+| **Kyber.unused3** | Int32 |
+| **Kyber.unused4** | Int32 |
+| **Kyber.VoipMute** |
+| **Kyber.VoipListCapturesDevices** |
+| **Kyber.VoipSetCaptureDevice** | <id [from VoipListCaptureDevices]> |
+| **Kyber.VoipSetInputVolume** | <volume [0-100, default=50, logarithmic/sensitive]> |
+| **Kyber.VoipSetOutputVolume** | <volume [0-100, default=50, logarithmic/sensitive]> |
 
 ### Main Menu Commands
-- `Kyber.Arcade_Run_1`
-- `Kyber.Arcade_Run_2`
-- `Kyber.Arcade_Run_4`
-- `Kyber.Arcade_Run_5`
-- `Kyber.Arcade_Run_6`
-- `Kyber.Arcade_Run_7`
-- `Kyber.Arcade_Run_8`
-- `Kyber.Arcade_Run_3`
-- `Kyber.Arcade_Run_1_coop`
-- `Kyber.Arcade_Run_2_coop`
-- `Kyber.Arcade_Run_3_coop`
-- `Kyber.Arcade_Run_4_coop`
-- `Kyber.Arcade_Run_5_coop`
-- `Kyber.Arcade_Run_6_coop`
-- `Kyber.Arcade_Run_7_coop`
-- `Kyber.Arcade_Run_8_coop`
-- `Kyber.Arcade_Run_1_versus`
-- `Kyber.Arcade_Run_2_versus`
-- `Kyber.Arcade_Run_3_versus`
-- `Kyber.Arcade_Run_4_versus`
-- `Kyber.Arcade_Run_5_versus`
-- `Kyber.Arcade_Run_6_versus`
-- `Kyber.Arcade_Run_7_versus`
-- `Kyber.Arcade_Run_8_versus`
-
-- `Kyber.Bomber`
-- `Kyber.BobaFett`
-- `Kyber.Bossk`
-- `Kyber.Blast`
-- `Kyber.BlastNav`
-- `Kyber.Broadcast <message>`
-- `Kyber.BundleDebugFontSize Float32`
-
-- `Kyber.COOPStarfighter1Onslaught`
-- `Kyber.COOPStarfighter1TeamBlast`
-- `Kyber.COOPStarfighter2Onslaught`
-- `Kyber.COOPStarfighter2TeamBlast`
-- `Kyber.COOPStarfighter3TeamBlast`
-- `Kyber.COOPStarfighter3Onslaught`
-- `Kyber.COOPStarfighter4TeamBlast`
-- `Kyber.COOPStarfighter4Onslaught`
-- `Kyber.COOPStarfighter5TeamBlast`
-- `Kyber.COOPStarfighter5Onslaught`
-- `Kyber.COOPStarfighter6TeamBlast`
-- `Kyber.COOPStarfighter6Onslaught`
-- `Kyber.Chewbacca`
-- `Kyber.CustomArcade_Tatooine`
-- `Kyber.COOP_NavGR`
-- `Kyber.COOP_NavResistance`
-- `Kyber.COOP_NavSA`
-- `Kyber.COOP_NavFO`
-- `Kyber.CrashGame`
-
-- `Kyber.DarthVader`
-- `Kyber.DarthMaul`
-- `Kyber.Doku`
-- `Kyber.demooverlay`
-- `Kyber.DisableTeamBalancing Boolean`
-
-- `Kyber.Enforcer`
-- `Kyber.Emperor`
-- `Kyber.EwokHunt`
-- `Kyber.Extraction`
-- `Kyber.ExtractionNav`
-- `Kyber.EwokHuntNav`
-- `Kyber.EpicCard`
-- `Kyber.ExtentDebug`
-- `Kyber.EnableShuffleTeams Boolean`
-- `Kyber.EnableUnlimitedPowerEvent Boolean`
-
-- `Kyber.FE_UI_MP`
-- `Kyber.FE_UI_SP`
-- `Kyber.Fighter`
-- `Kyber.Finn`
-- `Kyber.FullTeamSwap`
-
-- `Kyber.Grievous`
-- `Kyber.GalacticAssault`
-- `Kyber.GalacticAssaultNav`
-- `Kyber.grid`
-- `Kyber.GiveBattlepoints <player> <amount>`
-- `Kyber.GrantUnlock <player> <guid>`
-
-- `Kyber.Heavy`
-- `Kyber.HanSolo`
-- `Kyber.Hvv`
-- `Kyber.HeroShowdown`
-- `Kyber.HeroStarFighter`
-- `Kyber.HeroStarFighterNav`
-- `Kyber.HeroShowdownNav`
-- `Kyber.HeroesVsVillainsNav`
-- `Kyber.HotReloadLua`
-
-- `Kyber.Interceptor`
-- `Kyber.IdenVersio`
-- `Kyber.InstantAction_Nav`
-- `Kyber.Infiltrator`
-- `Kyber.IgnoreControllerError`
-
-- `Kyber.JoinServer <ip> <port>`
-
-- `Kyber.Kylo`
-
-- `Kyber.Luke`
-- `Kyber.Lando`
-- `Kyber.Leia`
-- `Kyber.LoadLevel <level> <mode>`
-- `Kyber.LoadSPLevel <level> <startPoint> <initialSubLevel>`
-- `Kyber.LoadSPLevel`
-- `Kyber.LogPlayerStats`
-- `Kyber.LogLastEbxLoad`
-
-- `Kyber.MilleniumFalconLando`
-- `Kyber.MilleniumFalconRey`
-- `Kyber.MilleniumFalcon`
-
-- `Kyber.Officer`
-- `Kyber.ObiWan`
-
-- `Kyber.Phasma`
-- `Kyber.PlayerJoinedGroup`
-- `Kyber.PlayerLeftGroup`
-- `Kyber.PlayerCancelled`
-- `Kyber.PlayerManagerAddr`
-- `Kyber.Platform GamePlatform`
-
-- `Kyber.Rey`
-- `Kyber.RZ-2A-Wing`
-- `Kyber.resetonboarding`
-- `Kyber.Restart`
-- `Kyber.RevokeUnlock <player> <guid>`
-- `Kyber.RenderBundles Boolean`
-- `Kyber.RenderPropertyDebug Boolean`
-- `Kyber.RenderCameraDebug Boolean`
-
-- `Kyber.SoloStarfighter1Onslaught`
-- `Kyber.SoloStarfighter1TeamBlast`
-- `Kyber.SoloStarfighter2Onslaught`
-- `Kyber.SoloStarfighter2TeamBlast`
-- `Kyber.SoloStarfighter3TeamBlast`
-- `Kyber.SoloStarfighter3Onslaught`
-- `Kyber.SoloStarfighter4TeamBlast`
-- `Kyber.SoloStarfighter4Onslaught`
-- `Kyber.SoloStarfighter5TeamBlast`
-- `Kyber.SoloStarfighter5Onslaught`
-- `Kyber.SoloStarfighter6TeamBlast`
-- `Kyber.SoloStarfighter6Onslaught`
-- `Kyber.Specialist`
-- `Kyber.Speeder`
-- `Kyber.Scimitar`
-- `Kyber.Slave1`
-- `Kyber.SpaceBattles`
-- `Kyber.Strike`
-- `Kyber.StrikeNav`
-- `Kyber.StarfighterAssaultNav`
-- `Kyber.SPNav`
-- `Kyber.safezone`
-- `Kyber.SendStats`
-- `Kyber.SaveLocation`
-
-- `Kyber.TieSilencer`
-- `Kyber.TieAdvanced`
-- `Kyber.TieLnFighter`
-- `Kyber.T-65BX-Wing`
-- `Kyber.T-70X-Wing`
-- `Kyber.Tutorial`
-- `Kyber.TitanPrequelNav`
-- `Kyber.TitanSequelNav`
-- `Kyber.TutorialConsole`
-- `Kyber.Teleport <player> <x> <y> <z>`
-- `Kyber.TestSetActive <player> <gpId> <unknown> <vurId> <skinInfoId>`
-- `Kyber.TestUpdateActive <player> <gpId>`
-- `Kyber.TestSetAbility <player> <abilityId> <slot>`
-
-- `Kyber.unused1 Int32`
-- `Kyber.unused2 Int32`
-- `Kyber.unused3 Int32`
-- `Kyber.unused4 Int32`
-
-- `Kyber.VersusStarfighter1TeamBlast`
-- `Kyber.VersusStarfighter2TeamBlast`
-- `Kyber.VersusStarfighter3TeamBlast`
-- `Kyber.VersusStarfighter4TeamBlast`
-- `Kyber.VersusStarfighter5TeamBlast`
-- `Kyber.VersusStarfighter6TeamBlast`
-- `Kyber.VoipMute`
-- `Kyber.VoipListCapturesDevices`
-- `Kyber.VoipSetCaptureDevice <id [from VoipListCaptureDevices]>`
-- `Kyber.VoipSetInputVolume <volume [0-100, default=50, logarithmic/sensitive]>`
-- `Kyber.VoipSetOutputVolume <volume [0-100, default=50, logarithmic/sensitive]>`
-
-- `Kyber.Yoda`
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| **Kyber.Arcade_Run_1** |
+| **Kyber.Arcade_Run_2** |
+| **Kyber.Arcade_Run_4** |
+| **Kyber.Arcade_Run_5** |
+| **Kyber.Arcade_Run_6** |
+| **Kyber.Arcade_Run_7** |
+| **Kyber.Arcade_Run_8** |
+| **Kyber.Arcade_Run_3** |
+| **Kyber.Arcade_Run_1_coop** |
+| **Kyber.Arcade_Run_2_coop** |
+| **Kyber.Arcade_Run_3_coop** |
+| **Kyber.Arcade_Run_4_coop** |
+| **Kyber.Arcade_Run_5_coop** |
+| **Kyber.Arcade_Run_6_coop** |
+| **Kyber.Arcade_Run_7_coop** |
+| **Kyber.Arcade_Run_8_coop** |
+| **Kyber.Arcade_Run_1_versus** |
+| **Kyber.Arcade_Run_2_versus** |
+| **Kyber.Arcade_Run_3_versus** |
+| **Kyber.Arcade_Run_4_versus** |
+| **Kyber.Arcade_Run_5_versus** |
+| **Kyber.Arcade_Run_6_versus** |
+| **Kyber.Arcade_Run_7_versus** |
+| **Kyber.Arcade_Run_8_versus** |
+| **Kyber.Bomber** |
+| **Kyber.BobaFett** |
+| **Kyber.Bossk** |
+| **Kyber.Blast** |
+| **Kyber.BlastNav** |
+| **Kyber.Broadcast** | <message> |
+| **Kyber.BundleDebugFontSize** | Float32 |
+| **Kyber.COOPStarfighter1Onslaught** |
+| **Kyber.COOPStarfighter1TeamBlast** |
+| **Kyber.COOPStarfighter2Onslaught** |
+| **Kyber.COOPStarfighter2TeamBlast** |
+| **Kyber.COOPStarfighter3TeamBlast** |
+| **Kyber.COOPStarfighter3Onslaught** |
+| **Kyber.COOPStarfighter4TeamBlast** |
+| **Kyber.COOPStarfighter4Onslaught** |
+| **Kyber.COOPStarfighter5TeamBlast** |
+| **Kyber.COOPStarfighter5Onslaught** |
+| **Kyber.COOPStarfighter6TeamBlast** |
+| **Kyber.COOPStarfighter6Onslaught** |
+| **Kyber.Chewbacca** |
+| **Kyber.CustomArcade_Tatooine** |
+| **Kyber.COOP_NavGR** |
+| **Kyber.COOP_NavResistance** |
+| **Kyber.COOP_NavSA** |
+| **Kyber.COOP_NavFO** |
+| **Kyber.CrashGame** |
+| **Kyber.DarthVader** |
+| **Kyber.DarthMaul** |
+| **Kyber.Doku** |
+| **Kyber.demooverlay** |
+| **Kyber.DisableTeamBalancing** | Boolean |
+| **Kyber.Enforcer** |
+| **Kyber.Emperor** |
+| **Kyber.EwokHunt** |
+| **Kyber.Extraction** |
+| **Kyber.ExtractionNav** |
+| **Kyber.EwokHuntNav** |
+| **Kyber.EpicCard** |
+| **Kyber.ExtentDebug** |
+| **Kyber.EnableShuffleTeams** | Boolean |
+| **Kyber.EnableUnlimitedPowerEvent** | Boolean |
+| **Kyber.FE_UI_MP** |
+| **Kyber.FE_UI_SP** |
+| **Kyber.Fighter** |
+| **Kyber.Finn** |
+| **Kyber.FullTeamSwap** |
+| **Kyber.Grievous** |
+| **Kyber.GalacticAssault** |
+| **Kyber.GalacticAssaultNav** |
+| **Kyber.grid** |
+| **Kyber.GiveBattlepoints** | <player> <amount> |
+| **Kyber.GrantUnlockk** | <player> <guid> |
+| **Kyber.Heavy** |
+| **Kyber.HanSolo** |
+| **Kyber.Hvv** |
+| **Kyber.HeroShowdown** |
+| **Kyber.HeroStarFighter** |
+| **Kyber.HeroStarFighterNav** |
+| **Kyber.HeroShowdownNav** |
+| **Kyber.HeroesVsVillainsNav** |
+| **Kyber.HotReloadLua** |
+| **Kyber.Interceptor** |
+| **Kyber.IdenVersio** |
+| **Kyber.InstantAction_Nav** |
+| **Kyber.Infiltrator** |
+| **Kyber.IgnoreControllerError** |
+| **Kyber.JoinServer** | <ip> <port> |
+| **Kyber.Kylo** |
+| **Kyber.Luke** |
+| **Kyber.Lando** |
+| **Kyber.Leia** |
+| **Kyber.LoadLevel** | <level> <mode> |
+| **Kyber.LoadSPLevel** | <level> <startPoint> <initialSubLevel> |
+| **Kyber.LoadSPLevel** |
+| **Kyber.LogPlayerStats** |
+| **Kyber.LogLastEbxLoad** |
+| **Kyber.MilleniumFalconLando** |
+| **Kyber.MilleniumFalconRey** |
+| **Kyber.MilleniumFalcon** |
+| **Kyber.Officer** |
+| **Kyber.ObiWan** |
+| **Kyber.Phasma** |
+| **Kyber.PlayerJoinedGroup** |
+| **Kyber.PlayerLeftGroup** |
+| **Kyber.PlayerCancelled** |
+| **Kyber.PlayerManagerAddr** |
+| **Kyber.Platform GamePlatform** |
+| **Kyber.Rey** |
+| **Kyber.RZ-2A-Wing** |
+| **Kyber.resetonboarding** |
+| **Kyber.Restart** |
+| **Kyber.RevokeUnlock** | <player> <guid> |
+| **Kyber.RenderBundles** | Boolean |
+| **Kyber.RenderPropertyDebug** | Boolean |
+| **Kyber.RenderCameraDebug** | Boolean |
+| **Kyber.SoloStarfighter1Onslaught** |
+| **Kyber.SoloStarfighter1TeamBlast** |
+| **Kyber.SoloStarfighter2Onslaught** |
+| **Kyber.SoloStarfighter2TeamBlast** |
+| **Kyber.SoloStarfighter3TeamBlast** |
+| **Kyber.SoloStarfighter3Onslaught** |
+| **Kyber.SoloStarfighter4TeamBlast** |
+| **Kyber.SoloStarfighter4Onslaught** |
+| **Kyber.SoloStarfighter5TeamBlast** |
+| **Kyber.SoloStarfighter5Onslaught** |
+| **Kyber.SoloStarfighter6TeamBlast** |
+| **Kyber.SoloStarfighter6Onslaught** |
+| **Kyber.Specialist** |
+| **Kyber.Speeder** |
+| **Kyber.Scimitar** |
+| **Kyber.Slave1** |
+| **Kyber.SpaceBattles** |
+| **Kyber.Strike** |
+| **Kyber.StrikeNav** |
+| **Kyber.StarfighterAssaultNav** |
+| **Kyber.SPNav** |
+| **Kyber.safezone** |
+| **Kyber.SendStats** |
+| **Kyber.SaveLocation** |
+| **Kyber.TieSilencer** |
+| **Kyber.TieAdvanced** |
+| **Kyber.TieLnFighter** |
+| **Kyber.T-65BX-Wing** |
+| **Kyber.T-70X-Wing** |
+| **Kyber.Tutorial** |
+| **Kyber.TitanPrequelNav** |
+| **Kyber.TitanSequelNav** |
+| **Kyber.TutorialConsole** |
+| **Kyber.Teleport** | <player> <x> <y> <z> |
+| **Kyber.TestSetActive** | <player> <gpId> <unknown> <vurId> <skinInfoId> |
+| **Kyber.TestUpdateActive** | <player> <gpId>|
+| **Kyber.TestSetAbility** | <player> <abilityId> <slot> |
+| **Kyber.unused1** | Int32 |
+| **Kyber.unused2** | Int32 |
+| **Kyber.unused3** | Int32 |
+| **Kyber.unused4** | Int32 |
+| **Kyber.VersusStarfighter1TeamBlast** |
+| **Kyber.VersusStarfighter2TeamBlast** |
+| **Kyber.VersusStarfighter3TeamBlast** |
+| **Kyber.VersusStarfighter4TeamBlast** |
+| **Kyber.VersusStarfighter5TeamBlast** |
+| **Kyber.VersusStarfighter6TeamBlast** |
+| **Kyber.VoipMute** |
+| **Kyber.VoipListCapturesDevices** |
+| **Kyber.VoipSetCaptureDevice** | <id [from VoipListCaptureDevices]> |
+| **Kyber.VoipSetInputVolume** | <volume [0-100, default=50, logarithmic/sensitive]> |
+| **Kyber.VoipSetOutputVolume** | <volume [0-100, default=50, logarithmic/sensitive]> |
+| **Kyber.Yoda** |
 
 # Data System
 ## Get Type Information
@@ -1025,6 +1003,35 @@ Example:
 ```lua
 player:SetInputEnabled(2, false) -- true to enable, false to disable
 ```
+
+**List of all inputs:**
+- `player:SetInputEnabled(871087120, false) -- left ability`
+- `player:SetInputEnabled(871087121, false) -- middle ability `
+- `player:SetInputEnabled(871087126, false) -- right ability`
+- `player:SetInputEnabled(871087127, false) -- bottom ability`
+- `player:SetInputEnabled(1017734666, false) -- jump`
+- `player:SetInputEnabled(871087131, false) -- combat roll`
+- `player:SetInputEnabled(-1761781660, false) -- crouch x`
+- `player:SetInputEnabled(460962317, false) -- crouch ctrl`
+- `player:SetInputEnabled(1018135856, false) -- fire`
+- `player:SetInputEnabled(1018302687, false) -- zoom`
+- `player:SetInputEnabled(871087123, false) -- switch to primary`
+- `player:SetInputEnabled(1541187862, false) -- interact`
+- `player:SetInputEnabled(1017609819, false) -- menu`
+- `player:SetInputEnabled(-1727611543, false) -- scoreboard`
+- `player:SetInputEnabled(-139230237, false) -- camera toggle`
+- `player:SetInputEnabled(1972684916, false) -- open chat`
+- `player:SetInputEnabled(673611848, false) -- team chat`
+- `player:SetInputEnabled(1884607995, false) -- group chat`
+- `player:SetInputEnabled(-1393477086, false) -- toggle chat`
+- `player:SetInputEnabled(1131457753, false) -- reload`
+- `player:SetInputEnabled(-1733859966, false) -- emotes`
+- `player:SetInputEnabled(-1733859967, false) -- voice lines`
+- `player:SetInputEnabled(618144124, false) -- melee`
+- `player:SetInputEnabled(1117495522, false) -- view abilities`
+- `player:SetInputEnabled(105005597, false) -- movement forward-back`
+- `player:SetInputEnabled(105005383, false) -- movement left-right`
+- `player:SetInputEnabled(696758033, false) -- sprint`
 
 ### Kick
 ```lua
