@@ -516,7 +516,7 @@ soldier.Health = 150
 
 You can check the type of a DataContainer with `.Is()`:
 ```lua
-if dc:Is("SoldierEntityData") then
+if DataContainer:Is("SoldierEntityData") then
     -- logic
 end
 ```
@@ -543,7 +543,7 @@ pos.y = 2
 pos.z = 3
 ```
 
-## Loop Through an FBArray
+## FBArray
 ```lua
 for _, v in pairs(array) do
     -- logic
@@ -558,7 +558,7 @@ end
 
 You can also extend an FBArray's size:
 ```lua
-array:extend(5)
+FBArray:extend(5)
 ```
 
 # Entity
@@ -583,7 +583,7 @@ local ents = EntityManager.GetList("SoldierEntity", Realm.Realm_Server)
 
 ## Read an entity property
 ```lua
-entity:Read(fieldName, typeName)
+Entity:Read(fieldName, typeName)
 ```
 Example:
 ```lua
@@ -592,7 +592,7 @@ local t = entity:Read("Transform", "LinearTransform")
 
 ## Write an entity property
 ```lua
-entity:Write(fieldName, typeName, value)
+Entity:Write(fieldName, typeName, value)
 ```
 Example:
 ```lua
@@ -600,7 +600,7 @@ local transform = LinearTransform()
 transform.x = 1
 transform.y = 2
 transform.z = 3
-entity:Write("Transform", "LinearTransform", transform)
+Entity:Write("Transform", "LinearTransform", transform)
 ```
 
 ## Firing an entity event
@@ -608,17 +608,17 @@ There are two ways to fire events on an entity:
 
 `FireEvent` immediately processes the event internally:
 ```lua
-entity:FireEvent(EntityEvent("OnDestroy"))
+Entity:FireEvent(EntityEvent("OnDestroy"))
 ```
 
 `Event` queues it to be executed in the entity's context:
 ```lua
-entity:Event(EntityEvent("Spawn"))
+Entity:Event(EntityEvent("Spawn"))
 ```
 
 You can also use `ServerPlayerEvent` in places where `EntityEvent` is accepted:
 ```lua
-entity:Event(ServerPlayerEvent("Spawn"))
+Entity:Event(ServerPlayerEvent("Spawn"))
 ```
 
 ## Entity properties
@@ -671,29 +671,29 @@ end)
 
 ### `Server:UpdatePre`
 ```lua
-EventManager.Listen("Server:UpdatePre", function(delta)
+EventManager.Listen("Server:UpdatePre", function(deltaTime)
     -- logic
 end)
 ```
 
 ### `ServerPlayer:Joined`
 ```lua
-EventManager.Listen("ServerPlayer:Joined", function(player)
+EventManager.Listen("ServerPlayer:Joined", function(joiningPlayer)
     print(player.name .. " joined")
 end)
 ```
 
 ### `ServerPlayer:Disconnect`
 ```lua
-EventManager.Listen("ServerPlayer:Disconnect", function(player)
+EventManager.Listen("ServerPlayer:Disconnect", function(disconnectedPlayer)
     print(player.name .. " left")
 end)
 ```
 
 ### `ServerPlayer:Killed`
 ```lua
-EventManager.Listen("ServerPlayer:Killed", function(victim, inflictor, weaponName)
-    print(victim.name .. " was killed by " .. inflictor.name .. " with " .. tostring(weaponName))
+EventManager.Listen("ServerPlayer:Killed", function(victim, killer, killerWeaponName)
+    print(victim.name .. " was killed by " .. killer.name .. " with " .. tostring(killerWeaponName))
 end)
 ```
 
@@ -751,76 +751,83 @@ end)
 
 ## Clear
 ```lua
-Clear() -- Clears all blocked phrases & regex.
+ChatFilter.Clear() -- Clears all blocked phrases & regex.
 ```
 
 ```lua
-ClearBlockedPhrases() -- Clears all blocked phrases.
+ChatFilter.ClearBlockedPhrases() -- Clears all blocked phrases.
 ```
 
 ```lua
-ClearBlockedRegex() -- Clears all blocked regex.
+ChatFilter.ClearBlockedRegex() -- Clears all blocked regex.
 ```
 
 ## Enable/Disable
 ```lua
-Enable() -- Enable chat filter filtering messages. Note: Even when disabled, you can still access these table functions.
+ChatFilter.Enable() -- Enable chat filter filtering messages. Note: Even when disabled, you can still access these table functions.
 ```
 
 ```lua
-Disable() -- Disable chat filter filtering messages. Note: Even when disabled, you can still access these table functions.
+ChatFilter.Disable() -- Disable chat filter filtering messages. Note: Even when disabled, you can still access these table functions.
 ```
 
 ```lua
-IsEnabled() -- Returns if the chat filter is enabled.
+ChatFilter.IsEnabled() -- Returns if the chat filter is enabled.
 ```
 
 ## Filter
 ```lua
-AddBlockedPhrase("string") -- Add blocked phrase to chat filter. Filtering of this type is case insensitive. Returns whether the phrase was added to the list or already existed (false)
+ChatFilter.AddBlockedPhrase("string") -- Add blocked phrase to chat filter. Filtering of this type is case insensitive. Returns whether the phrase was added to the list or already existed (false)
 ```
 
 ```lua
-AddBlockedRegex("string") -- Add blocked regex to chat filter. Returns whether the regex was added to the list or already existed (false)
+ChatFilter.AddBlockedRegex("string") -- Add blocked regex to chat filter. Returns whether the regex was added to the list or already existed (false)
 ```
 
 ```lua
-SetFilterCharacter("string") -- Sets the chat filter's replacement character. For example, if set to '#', "blah badword" -> "blah #######"
+ChatFilter.SetFilterCharacter("string") -- Sets the chat filter's replacement character. For example, if set to '#', "blah badword" -> "blah #######"
 ```
 
 ```lua
-GetFilterCharacter() -- Gets the chat filter's replacement character.
+ChatFilter.GetFilterCharacter() -- Gets the chat filter's replacement character.
 ```
 
-# Map Rotation
+# `Map Rotation`
 ```lua
-AddMap(level: string, mode: string): void -- Adds a map entry to the end of the rotation. Raises an error if either level or mode is an empty string.
+MapRotation.AddMap(level: string, mode: string): void -- Adds a map entry to the end of the rotation. Raises an error if either level or mode is an empty string.
 ```
 A `Level` is this `Levels/MP/DeathStar02_01/DeathStar02_01` and a `Mode` is this `Mode1`.
 
 ```lua
-Clear(level: string, mode: string): void -- Clears the entire rotation and resets it with a single required starting entry. Raises an error if either level or mode is an empty string.
+MapRotation.Clear(level: string, mode: string): void -- Clears the entire rotation and resets it with a single required starting entry. Raises an error if either level or mode is an empty string.
 ```
 
 ```lua
-GetNextMap(): MapRotationEntry -- Returns the next map entry in the rotation without removing it.
+MapRotation.GetNextMap(): MapRotationEntry -- Returns the next map entry in the rotation without removing it.
 ```
 
 ```lua
-RemoveNextMap(): void -- Removes the next map entry from the rotation.
+MapRotation.RemoveNextMap(): void -- Removes the next map entry from the rotation.
 ```
 
 ```lua
-GetCurrentEntryIndex(): integer -- Returns the current index within the map rotation list.
+MapRotation.GetCurrentEntryIndex(): integer -- Returns the current index within the map rotation list.
 ```
 
 ```lua
-GetList(): MapRotationEntry -- Returns the full list of map rotation entries.
+MapRotation.GetList(): MapRotationEntry -- Returns the full list of map rotation entries.
+```
+
+# `EntityFactory:Create:[dynamic]`
+```lua
+EventManager.Listen("EntityFactory:Create:[dynamic]", function(entityData)
+    -- logic
+end)
 ```
 
 # Client Events
 >[!WARNING]
->Client plugins are currently disabled as seen [here](https://github.com/ArmchairDevelopers/Kyber/blob/c589c5d221d70da0c23034073351cb64f95341d9/Module/Source/Script/ScriptManager.cpp#L171-L181). Client side events exist in the source, but client plugins are not loaded, so these APIs cannot be used.
+>Client plugins are depreciated as seen [here](https://github.com/ArmchairDevelopers/Kyber/blob/c589c5d221d70da0c23034073351cb64f95341d9/Module/Source/Script/ScriptManager.cpp#L171-L181). Client side events exist in the source, but client plugins are not loaded, so these APIs cannot be used.
 
 ### `Client:UpdatePre(deltaTime)`
 
@@ -1096,26 +1103,26 @@ player:SetCooldownModifier(1.2)
 ```
 
 ## Properties
-```lua
-player.name              -- string
-player.playerId          -- integer
-player.team              -- integer
-player.battlepoints      -- integer
-player.score             -- integer
-player.kills             -- integer
-player.assists           -- integer
-player.deaths            -- integer
-player.characterEntity   -- Entity
-player.vehicleEntity     -- Entity
-player.activeKit         -- DataContainer
-player.isBot             -- boolean
-player.isSpawned         -- boolean
-player.isAlive           -- boolean
-```
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| player.name | string |
+| player.playerId | integer |
+| player.team | integer |
+| player.battlepoints | integer |
+| player.score | integer |
+| player.kills | integer |
+| player.assists | integer |
+| player.deaths | integer |
+| player.afkTime | number |
+| player.characterEntity | Entity |
+| player.vehicleEntity | Entity |
+| player.activeKit | DataContainer |
+| player.isBot | boolean |
+| player.isAlive | boolean |
 
 # ResourceManager
 ```lua
-ResourceManager.LookupDataContainer(name)
+ResourceManager.LookupDataContainer(assetName)
 ```
 Example:
 ```lua
@@ -1130,7 +1137,7 @@ local server = SocketManager.Create(9000)
 
 ## Connecting to a socket
 ```lua
-local socket = SocketManager.CreateSend("127.0.0.1", 9000)
+local socket = SocketManager.CreateConnect("127.0.0.1", 9000)
 ```
 >[!IMPORTANT]
 >The URI must be `"127.0.0.1"`. External addresses are not allowed.
@@ -1169,7 +1176,7 @@ local t = Utils.GetClientCameraTransform()
 Utils.GetActiveCameraTransform(t)
 ```
 
-## Allowed Libraries
+<!--## Allowed Libraries
 ```
 base
 package
@@ -1188,7 +1195,7 @@ os.remove
 os.rename
 os.setlocale
 os.tmpname
-```
+```-->
 
 # Example Plugins
 
@@ -1453,4 +1460,4 @@ end
 ```
 
 ## Credits
-[Magix](https://github.com/MagixGames) for the [Official Kyber Docs](https://github.com/ArmchairDevelopers/KyberDocs/tree/feat/plugins-api/content/docs/pluginref) on GitHub and soon on their [website](https://docs.kyber.gg/g/pluginref).
+Kyber Team for the [Official Kyber Docs](https://github.com/ArmchairDevelopers/KyberDocs/tree/feat/plugins-api/content/docs/pluginref) on GitHub and soon on their [website](https://docs.kyber.gg/g/pluginref).
