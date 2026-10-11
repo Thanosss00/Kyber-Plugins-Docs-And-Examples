@@ -1,6 +1,6 @@
 # Kyber-Plugins-Docs-and-Examples
 >[!NOTE]
->This guide is not the official guide provided by the Kyber Team, you can find their guide [here](https://docs.kyber.gg/g/pluginref). Also this guide is for `ver/beta10`, go [here](https://github.com/Thanosss00/Kyber-Plugins-Docs-And-Examples/tree/stable) if you are using `stable`.
+>This guide is not the official guide provided by the Kyber Team and might not be completely up to date, you can find their guide [here](https://docs.kyber.gg/g/pluginref). Also this guide is for `ver/beta10`, go [here](https://github.com/Thanosss00/Kyber-Plugins-Docs-And-Examples/tree/stable) if you are using `stable`.
 
 ## How to Make a Kyber Plugin
 First off below is the file structure
@@ -29,7 +29,7 @@ ExamplePlugin/
     ├── admins.lua (this is for adding admins, if your plugin doesn't need any then you don't need it)
 ```
 
-# plugin.json
+## plugin.json
 This file contains the plugins name and the authors name.
 
 Example:
@@ -40,7 +40,7 @@ Example:
 }
 ```
 
-# sdk.lua
+## sdk.lua
 This file isn't necessary, you only need it if you plan to use any library extension (extra functions that Lua doesn't have by default).
 You can load it in a file with:
 ```lua 
@@ -52,7 +52,8 @@ require "sdk"
 ```
 
 Example:
-table.contains
+
+### table.contains
 ```lua
 table.contains = function(tbl, element)
     for _, value in pairs(tbl) do
@@ -64,7 +65,7 @@ table.contains = function(tbl, element)
 end
 ```
 
-string.split
+### string.split
 ```lua
 string.split = function(str, sep)
     sep = sep or "%s"
@@ -76,38 +77,59 @@ string.split = function(str, sep)
 end
 ```
 
-TimerService
+### TimerService
 ```lua
 TimerService = {
-    timers = {}
+    timers = {},
+    
+    update = function(self, deltaSecs)
+        for i = #self.timers, 1, -1 do
+            local timer = self.timers[i]
+            timer.elapsed = timer.elapsed + deltaSecs
+            if timer.elapsed >= timer.interval then
+                timer.elapsed = timer.elapsed - timer.interval
+                timer.callback(timer)
+                if not timer.running then
+                    table.remove(self.timers, i)
+                end
+            end
+        end
+    end,
 }
 
-function TimerService:update(delta)
-    for i = #self.timers, 1, -1 do
-        local t = self.timers[i]
-        t.elapsed = t.elapsed + delta
+EventManager.Listen("Server:UpdatePre", TimerService.update, TimerService)
 
-        if t.elapsed >= t.delay then
-            t.callback()
-            table.remove(self.timers, i)
-        end
-    end
+Timer = {}
+Timer.__index = Timer
+
+function Timer:new(interval, callback)
+    local obj = setmetatable({}, self)
+    obj.interval = interval
+    obj.callback = callback
+    obj.elapsed = 0
+    obj.running = true
+    table.insert(TimerService.timers, obj)
+    return obj
 end
 
-EventManager.Listen("Server:UpdatePre", function(delta)
-    TimerService:update(delta)
-end)
+function Timer:cancel()
+    self.running = false
+end
 
 function SetTimeout(callback, delay)
-    table.insert(TimerService.timers, {
-        delay = delay,
-        elapsed = 0,
-        callback = callback
-    })
+    Timer:new(delay, function(timer)
+        callback()
+        timer:cancel()
+    end)
 end
+
+return {
+    Timer = Timer,
+    SetTimeout = SetTimeout
+}
 ```
 
-# admins.lua
+## admins.lua
 If you want admins and admin commands in your plugin, this is where you define them.
 You can load it in a file with:
 ```lua 
@@ -133,7 +155,7 @@ EventManager.Listen("ServerPlayer:SendMessage", function(player, message)
 
     if #messageSplit <= 0 then return end
     if messageSplit[1]:len() < 3 then return end
-    if messageSplit[1]:sub(1, 1) ~= '/' then return end
+    if messageSplit[1]:sub(1, 1) ~= '/' then return end -- Here you define the symbol you want your command to start with, in this case it's '/'
 
     local command = messageSplit[1]:lower():sub(2)
 
@@ -151,23 +173,26 @@ EventManager.Listen("ServerPlayer:SendMessage", function(player, message)
 end)
 ```
 
-# \_\_init\_\_.lua
+## \_\_init\_\_.lua
 This is the main file of your plugin, most of the things will be done here!
 
 Example:
 ```lua
-EventManager.Listen("ServerPlayer:Joined", function(player)
-    print(player.name .. " joined the server")
+EventManager.Listen("ServerPlayer:Joined", function(joiningPlayer)
+    -- Whenever a player joins the server it will print this in the console
+    print(joiningPlayer.name .. " joined the server")
+    -- You can also Broadcast it as a message so every player knows who joined
+    -- Console.Execute("Kyber.Broadcast joiningPlayer.name .. " joined the server"")
 end)
 ```
 
-# How to use a Plugin on a server
+## How to use a Plugin on a server
 >[!NOTE]
->Plugins must be packaged as .kbplugin files (zip with a .kbplugin extension) when you are ready to use them on a server.
+>Plugins must be packaged as .kbplugin files when you are ready to use them on a server.
 >Right now plugins can only be used on **Dedicated Servers**, you can read my [guide](https://github.com/Thanosss00/Kyber-Dedicated-Server-Guide), or the [official guide](https://docs.kyber.gg/g/hosting/dedicated-servers/prereq) provided by the Kyber Team.
 
-# Console
-## How to register a command
+## Console
+### How to register a command
 ```lua
 Console.Register(groupName, name, description, instanceTable, function(self, args)
     -- logic
@@ -180,79 +205,124 @@ Console.Register("MyGroup", "hello", "Prints hello", instanceTable, function(sel
 end)
 ```
 
-## How to run a command
+## How to execute a command
 ```lua
 Console.Execute("string")
 ```
 Example:
 ```lua
-Console.Execute("hello")
+Console.Execute("Kyber.CrashGame") 
 ```
 
-## Access settings object
+## Get Settings
 ```lua
-local settings = Console.GetSettings("GroupName")
+Console.GetSettings("string")
 ```
 
 ## Console commands 
 >[!NOTE]
->Some of these commands work only on the main menu (e.g. `Kyber.DarthVader`, `Kyber.Luke` etc). So I will split them into General Console Commands(these are from the base game), In Game and Main Menu commands.
+>Some of these commands work only on the main menu (e.g. `Kyber.DarthVader`, `Kyber.Luke` etc). So I will split them into General Console Commands(these are mainly from the base game), Kyber In Game and Main Menu commands.
 
-## General Console Commands
+### General Console Commands
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| AutoPlayers.AllowClientTakeOver | Boolean |
-| AutoPlayers.AllowRandomPathSpread | Boolean |
-| AutoPlayers.ForceFillGameplayBotsTeam1 |
-| AutoPlayers.ForceFillGameplayBotsTeam2 |
-| AutoPlayers.HeroSpawnProbability_Gameplay | Float32 |
-| AutoPlayers.HeroVehicleSpawnProbability_Gameplay | Float32 |
-| AutoPlayers.HeroSpawnProbability | Float32 |
-| AutoPlayers.HeroVehicleSpawnProbability | Float32 |
-| AutoPlayers.HeroStrafeProbabilityPerFrame | Float32 |
-| AutoPlayers.IgnoreHumanPlayers | Boolean |
-| AutoPlayers.RandomPathSpreadRadius | Float32 |
-| AutoPlayers.UpdateAI | Boolean |
-| GameTime.MaxVariableFps | Float32 |
-| GameTime.TimeScale | Float32 |
-| NetworkPerfOverlay.Enable | Boolean |
-| PerfOverlay.DrawFps | Boolean |
-| PerfOverlay.DrawGraph | Boolean |
-| PerfOverlay.DrawCpuGraph | Boolean |
-| PerfOverlay.DrawGpuGraph | Boolean |
-| PerfOverlay.DrawFrameGraph | Boolean |
-| Render.ForceFov | Float32 |
-| Render.ForceOrthoViewEnable | Boolean |
-| UIDrawEnable | Boolean |
-| Worldrender.Viewmode WorldViewMode_Light |
-| Worldrender.Viewmode WorldViewMode_FilmicEffects |
-| Worldrender.Viewmode WorldViewMode_LightSpecular |
-| Worldrender.Viewmode WorldViewMode_LightDiffuse |
-| Worldrender.Viewmode WorldViewMode_Emissive |
+| **AutoPlayers.AllowClientTakeOver** | Boolean |
+| **AutoPlayers.AllowRandomPathSpread** | Boolean |
+| **AutoPlayers.ForceFillGameplayBotsTeam1** |
+| **AutoPlayers.ForceFillGameplayBotsTeam2** |
+| **AutoPlayers.HeroSpawnProbability_Gameplay** | Float32 |
+| **AutoPlayers.HeroVehicleSpawnProbability_Gameplay** | Float32 |
+| **AutoPlayers.HeroSpawnProbability** | Float32 |
+| **AutoPlayers.HeroVehicleSpawnProbability** | Float32 |
+| **AutoPlayers.HeroStrafeProbabilityPerFrame** | Float32 |
+| **AutoPlayers.IgnoreHumanPlayers** | Boolean |
+| **AutoPlayers.RandomPathSpreadRadius** | Float32 |
+| **Autoplayers.ResetSettingsOnLevelUnload** | Boolean |
+| **AutoPlayers.UpdateAI** | Boolean |
+| **GameTime.Platform** | GamePlatform |
+| **GameTime.UseWaitableTimers** | Boolean |
+| **GameTime.MaxSimFps** | Float 32 |
+| **GameTime.ForceSimRate** | Uint 32 |
+| **GameTime.MaxVirtualTicks** | Uint 32 |
+| **GameTime.MaxVariableFps** | Float32 |
+| **GameTime.MaxInactiveVariableFps** | Float32 |
+| **GameTime.ForceDeltaTime** | Float32 |
+| **GameTime.ForceUseSleepTimer** | Boolean |
+| **GameTime.TimeScale** | Float32 |
+| **GameTime.DebugFrameDelayMs** | Uint 32 |
+| **GameTime.DedicatedServerSleepInMsDuringLoading** | Uint 32 |
+| **NetworkPerfOverlay.Enable** | Boolean |
+| **NetworkPerfOverlay.GraphPos** | Vec2 |
+| **PerfOverlay.DrawFps** | Boolean |
+| **PerfOverlay.DrawGraph** | Boolean |
+| **PerfOverlay.DrawCpuGraph** | Boolean |
+| **PerfOverlay.DrawGpuGraph** | Boolean |
+| **PerfOverlay.DrawFrameGraph** | Boolean |
+| **Render.ForceFov** | Float32 |
+| **Render.ForceOrthoViewEnable** | Boolean |
+| **Server.HumanHealthMultiplier** | Float 32 |
+| **UIDrawEnable** | Boolean |
+| **Worldrender.Viewmode WorldViewMode_Light** |
+| **Worldrender.Viewmode WorldViewMode_FilmicEffects** |
+| **Worldrender.Viewmode WorldViewMode_LightSpecular** |
+| **Worldrender.Viewmode WorldViewMode_LightDiffuse** |
+| **Worldrender.Viewmode WorldViewMode_Emissive** |
 
 ## Kyber Console Commands
+>[!Important]
+> Some console commands are only for a specific gamemode, for example `Kyber.SkipTitanPhase1` appears and works only on Supremacy, `Kyber.BlockEwokSpawn` appears and works only on Ewok Hunt, etc.
 ### In Game Commands
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | **Kyber.addplayer** |
 | **Kyber.AddLevel** | <level> <mode> |
-| **Kyber.BundleDebugFontSize** | Float32` |
+| **Kyber.BlockEwokSpawn** |
+| **Kyber.BoardingTeam1** |
+| **Kyber.BoardingTeam2** |
+| **Kyber.BotLogicDebug** |
+| **Kyber.Broadcast** | <message> |
+| **Kyber.BundleDebugFontSize** | Float32 |
 | **Kyber.countdown** |
+| **Kyber.Conquest** |
+| **Kyber.CapturePointDebug** |
+| **Kyber.CameraRotationDisabled** |
+| **Kyber.ClientPlayerExtentDebug** |
 | **Kyber.CrashGame** |
+| **Kyber.debug_cinematic_cinematics_streamIn** |
+| **Kyber.debug_cinematic_triggerOuttro_Team1** |
+| **Kyber.debug_cinematic_triggerOuttro_Team2** |
+| **Kyber.debug_testBattleStart** |
+| **Kyber.debug_testBattleStop** |
+| **Kyber.DefendDebug** |
+| **Kyber.DefendDebugDefenders** |
+| **Kyber.DreadnoughtDamagestate0** |
+| **Kyber.DreadnoughtDamagestate1** |
+| **Kyber.DreadnoughtDamagestate2** |
+| **Kyber.DreadnoughtDamagestate3** |
 | **Kyber.demooverlay** |
+| **Kyber.DebugLogComponentsCharacter** |
+| **Kyber.DisableFakeBattle** |
+| **Kyber.DisableBlackPlumes** |
+| **Kyber.DisableDustVista** |
 | **Kyber.DisableTeamBalancing** | Boolean |
 | **Kyber.endgameteam1** |
 | **Kyber.endgameteam2** |
 | **Kyber.endofround** |
+| **Kyber.endround** |
 | **Kyber.eventwelcometimer** |
+| **Kyber.EnableFakeBattle** |
+| **Kyber.EnableBlackPumes** |
+| **Kyber.EnableDustVista** |
 | **Kyber.EnableLighting1** |
 | **Kyber.EnableLighting2** |
+| **Kyber.EnableLighting3** |
 | **Kyber.eortest** |
 | **Kyber.eor** |
 | **Kyber.ExtentDebug** |
 | **Kyber.EnableShuffleTeams Boolean** |
 | **Kyber.EnableUnlimitedPowerEvent** | Boolean |
 | **Kyber.forcestartevent** |
+| **Kyber.ForceNextSection** |
 | **Kyber.FullTeamSwap** |
 | **Kyber.grid** |
 | **Kyber.GiveBattlepoints** | <player> <amount> |
@@ -260,17 +330,38 @@ local settings = Console.GetSettings("GroupName")
 | **Kyber.HotReloadLua** |
 | **Kyber.IgnoreControllerError** |
 | **Kyber.JoinServer** | <ip> <port> |
+| **Kyber.killz** |
+| **Kyber.land** |
 | **Kyber.LoadLevel** | <level> <mode> |
 | **Kyber.LoadSPLevel** | <level> <startPoint> <initialSubLevel> |
-| **Kyber.LoadSPLevel** |
+| **Kyber.LoadSPLevel2** |
+| **Kyber.LogMemoryLeak** |
 | **Kyber.LogPlayerStats** |
 | **Kyber.LogLastEbxLoad** |
+| **Kyber.LogFilteredChatMessages** | Boolean |
 | **Kyber.mvpdebug** |
+| **Kyber.Mode9DefendersDebug**|
+| **Kyber.Mode9AttackersDebug**|
+| **Kyber.Mode8Difficulty0** |
+| **Kyber.Mode8Difficulty1** |
+| **Kyber.Mode8Difficulty2** |
+| **Kyber.maxkill** |
+| **Kyber.mttspeed** |
+| **Kyber.MTTdebug** |
 | **Kyber.MaterialID.On** |
 | **Kyber.MaterialID.Off** |
+| **Kyber.nextround** |
+| **Kyber.NoAI** |
+| **Kyber.NoCinematics** |
 | **Kyber.outline_off** |
 | **Kyber.outline_on** |
+| **Kyber.OutroTeam1** |
+| **Kyber.OutroTeam2** |
 | **Kyber.ObjectiveDamageScale** |
+| **Kyber.OneHitObjective** |
+| **Kyber.pausetimer** |
+| **Kyber.phase2** |
+| **Kyber.phase3** |
 | **Kyber.PlayerJoinedGroup** |
 | **Kyber.PlayerLeftGroup** |
 | **Kyber.PlayerCancelled** |
@@ -283,10 +374,29 @@ local settings = Console.GetSettings("GroupName")
 | **Kyber.RenderBundles** | Boolean |
 | **Kyber.RenderPropertyDebug** | Boolean |
 | **Kyber.RenderCameraDebug** | Boolean |
+| **Kyber.RenderServerPerformance** | Boolean |
+| **Kyber.RenderLatencyDisplay**| Boolean |
 | **Kyber.startgame** |
 | **Kyber.starttimer** |
+| **Kyber.startextractiontimer** |
+| **Kyber.stopextractiontimer** |
+| **Kyber.startload** |
+| **Kyber.stopload** |
+| **Kyber.spawn** |
+| **Kyber.StreamInDreadnought** |
+| **Kyber.StreamOutDreadnought** |
+| **Kyber.StreamInVenator** |
+| **Kyber.StreamOutVenator** |
+| **Kyber.StopTicketGain** |
+| **Kyber.SkipTitanPhase1** |
+| **Kyber.StopMode1Progress** |
+| **Kyber.StopTimer** |
+| **Kyber.skiptitanphase1** |
+| **Kyber.shot1** |
+| **Kyber.shot2** |
 | **Kyber.safezone** |
 | **Kyber.SendStats** |
+| **Kyber.ServerPlayerExtentDebug** |
 | **Kyber.SaveLocation** |
 | **Kyber.SetTeam** | <player> <team> |
 | **Kyber.SetTeamByIndex** | <playerIndex> <team> |
@@ -294,6 +404,12 @@ local settings = Console.GetSettings("GroupName")
 | **Kyber.ShuffleTeams** |
 | **Kyber.SetBattlepoints** | <player> <amount> |
 | **Kyber.SaveData** |
+| **Kyber.TicketLossScale** |
+| **Kyber.TitanTeam2** |
+| **Kyber.TitanTeam1** |
+| **Kyber.TriggerOrphans** |
+| **Kyber.ToggleTimer** |
+| **Kyber.TeamsDebug** |
 | **Kyber.toggleMusic** |
 | **Kyber.toggleVO** |
 | **Kyber.toggleAmbience** |
@@ -363,11 +479,14 @@ local settings = Console.GetSettings("GroupName")
 | **Kyber.COOP_NavResistance** |
 | **Kyber.COOP_NavSA** |
 | **Kyber.COOP_NavFO** |
+| **Kyber.ClearS1** |
+| **Kyber.ClientPlayerExtentDebug** |
 | **Kyber.CrashGame** |
 | **Kyber.DarthVader** |
 | **Kyber.DarthMaul** |
 | **Kyber.Doku** |
 | **Kyber.demooverlay** |
+| **Kyber.DebugLogComponentsCharacter** |
 | **Kyber.DisableTeamBalancing** | Boolean |
 | **Kyber.Enforcer** |
 | **Kyber.Emperor** |
@@ -411,9 +530,11 @@ local settings = Console.GetSettings("GroupName")
 | **Kyber.Leia** |
 | **Kyber.LoadLevel** | <level> <mode> |
 | **Kyber.LoadSPLevel** | <level> <startPoint> <initialSubLevel> |
-| **Kyber.LoadSPLevel** |
+| **Kyber.LoadSPLeve2** |
+| **Kyber.LogMemoryLeak** |
 | **Kyber.LogPlayerStats** |
 | **Kyber.LogLastEbxLoad** |
+| **Kyber.LogFilteredChatMessages** | Boolean |
 | **Kyber.MilleniumFalconLando** |
 | **Kyber.MilleniumFalconRey** |
 | **Kyber.MilleniumFalcon** |
@@ -433,6 +554,8 @@ local settings = Console.GetSettings("GroupName")
 | **Kyber.RenderBundles** | Boolean |
 | **Kyber.RenderPropertyDebug** | Boolean |
 | **Kyber.RenderCameraDebug** | Boolean |
+| **Kyber.RenderServerPerformance** | Boolean |
+| **Kyber.RenderLatencyDisplay** | Boolean |
 | **Kyber.SoloStarfighter1Onslaught** |
 | **Kyber.SoloStarfighter1TeamBlast** |
 | **Kyber.SoloStarfighter2Onslaught** |
@@ -455,8 +578,17 @@ local settings = Console.GetSettings("GroupName")
 | **Kyber.StarfighterAssaultNav** |
 | **Kyber.SPNav** |
 | **Kyber.safezone** |
-| **Kyber.SendStats** |
 | **Kyber.SaveLocation** |
+| **Kyber.SaveData** |
+| **Kyber.SendStats** |
+| **Kyber.ServerPlayerExtentDebug** |
+| **Kyber.SetTeam** | <player> <team> |
+| **Kyber.SetTeamByIndex** | <playerIndex> <team> |
+| **Kyber.SetTeamById** | <playerId> <team> |
+| **Kyber.ShuffleTeams** |
+| **Kyber.SetBattlepoints** | <player> <amount> |
+| **Kyber.SaveLocation** |
+| **Kyber.Slave1** |
 | **Kyber.TieSilencer** |
 | **Kyber.TieAdvanced** |
 | **Kyber.TieLnFighter** |
@@ -487,15 +619,15 @@ local settings = Console.GetSettings("GroupName")
 | **Kyber.VoipSetOutputVolume** | <volume [0-100, default=50, logarithmic/sensitive]> |
 | **Kyber.Yoda** |
 
-# Data System
-## Get Type Information
+## Data System
+### Get Type Information
 ```lua
 local ti = dc.typeInfo
 print(ti.name)
 print(ti:IsKindOf("GameComponentData"))
 ```
 
-## DataContainer
+### DataContainer
 Reading a DataContainer field:
 ```lua
 value = container.FieldName
@@ -521,7 +653,7 @@ if DataContainer:Is("SoldierEntityData") then
 end
 ```
 
-## Create a DataContainer
+### Create a DataContainer
 ```lua
 local obj = SomeType()
 ```
@@ -531,7 +663,7 @@ local data = SoldierEntityData()
 data.Health = 100
 ```
 
-## Create a ValueType
+### Create a ValueType
 ```lua
 local v = Vec3()
 ```
@@ -543,7 +675,7 @@ pos.y = 2
 pos.z = 3
 ```
 
-## FBArray
+### FBArray
 ```lua
 for _, v in pairs(array) do
     -- logic
@@ -561,8 +693,8 @@ You can also extend an FBArray's size:
 FBArray:extend(5)
 ```
 
-# Entity
-## Creating an entity
+## Entity
+### Creating an entity
 ```lua
 EntityManager.Create(dataContainer)
 ```
@@ -572,7 +704,7 @@ local data = SomeEntityData()
 local ent = EntityManager.Create(data)
 ```
 
-## Get entities
+### Get entities
 ```lua
 EntityManager.GetList(typeName, realm)
 ```
@@ -581,7 +713,7 @@ Example:
 local ents = EntityManager.GetList("SoldierEntity", Realm.Realm_Server)
 ```
 
-## Read an entity property
+### Read an entity property
 ```lua
 Entity:Read(fieldName, typeName)
 ```
@@ -590,7 +722,7 @@ Example:
 local t = entity:Read("Transform", "LinearTransform")
 ```
 
-## Write an entity property
+### Write an entity property
 ```lua
 Entity:Write(fieldName, typeName, value)
 ```
@@ -603,7 +735,7 @@ transform.z = 3
 Entity:Write("Transform", "LinearTransform", transform)
 ```
 
-## Firing an entity event
+### Firing an entity event
 There are two ways to fire events on an entity:
 
 `FireEvent` immediately processes the event internally:
@@ -621,34 +753,37 @@ You can also use `ServerPlayerEvent` in places where `EntityEvent` is accepted:
 Entity:Event(ServerPlayerEvent("Spawn"))
 ```
 
-## Entity properties
+### Entity properties
 ```lua
 entity.data  
 entity.bus   
 ```
 
-# Event Manager
-## Listen to an Event
+## Event Manager
+### Listen to an Event
 ```lua
-EventManager.Listen(eventName, function(...)
+EventManager.Listen(eventName, function(...) -- Subscribes a listener to an event.
     -- logic
 end)
 ```
 
 ```lua
-EventManager.Listen(eventName, inst,  function(...)
+EventManager.Listen(eventName, inst,  function(...) -- Subscribes a listener to an event.
     -- logic
 end)
 ```
 
 Example:
 ```lua
-EventManager.Listen("ServerPlayer:Joined", function(player)
-    print(player.name .. " joined!")
+EventManager.Listen("ServerPlayer:Joined", function(joiningPlayer)
+    -- Whenever a player joins the server it will print this in the console
+    print(joiningPlayer.name .. " joined the server")
+    -- You can also Broadcast it as a message so every player knows who joined
+    -- Console.Execute("Kyber.Broadcast joiningPlayer.name .. " joined the server"")
 end)
 ```
 
-## Cancel an event
+### Cancel an event
 **This must be called inside an event listener.**
 ```lua
 EventManager.SetCancelled(true)
@@ -657,12 +792,13 @@ EventManager.SetCancelled(true)
 Example:
 ```lua
 EventManager.Listen("ServerPlayer:SendMessage", function(player, message)
-    EventManager.SetCancelled(true)
+    EventManager.SetCancelled(true) -- Set current running event cancellation to be queued.
 end)
 ```
 
 ## All Events
 ### `Server:Init`
+Ran as soon as the server is fully created. The first event to run. A good place to put initialization logic.
 ```lua
 EventManager.Listen("Server:Init", function()
     print("Server initialized!")
@@ -670,62 +806,96 @@ end)
 ```
 
 ### `Server:UpdatePre`
+Update event every tick. Ran before the tick logic is executed.
 ```lua
 EventManager.Listen("Server:UpdatePre", function(deltaTime)
-    -- logic
+    -- Since this checks every tick, we can check if the player is alive
+    if player.IsAlive then
+        print(player .. "is alive")
+    else
+        print(player .. "is dead")
+    end
 end)
 ```
 
 ### `ServerPlayer:Joined`
+Ran when a player joins the server.
 ```lua
 EventManager.Listen("ServerPlayer:Joined", function(joiningPlayer)
-    print(player.name .. " joined")
+    print(joiningPlayer.name .. " joined the server") -- Whenever a player joins the server it will print this in the console
+    -- You can also Broadcast it as a message so every player knows who joined
+    -- Console.Execute("Kyber.Broadcast joiningPlayer.name .. " joined the server"")
 end)
 ```
 
 ### `ServerPlayer:Disconnect`
+Ran when a player leaves the server.
 ```lua
 EventManager.Listen("ServerPlayer:Disconnect", function(disconnectedPlayer)
-    print(player.name .. " left")
+    print(disconnectedPlayer.name .. " left") -- Whenever a player leaves the server it will print this in the console
+    -- You can also Broadcast it as a message so every player knows who left
+    -- Console.Execute("Kyber.Broadcast joiningPlayer.name .. " left the server"")
 end)
 ```
 
 ### `ServerPlayer:Killed`
+Ran when a player is killed. Killer player may be nil.
 ```lua
 EventManager.Listen("ServerPlayer:Killed", function(victim, killer, killerWeaponName)
-    print(victim.name .. " was killed by " .. killer.name .. " with " .. tostring(killerWeaponName))
+    print(victim.name .. " was killed by " .. killer.name .. " with " .. tostring(killerWeaponName)) -- Whenever a player gets killed it will print this in the console
+    -- You can also Broadcast it as a message so every player knows who died and by who
+    -- Console.Execute("Kyber.Broadcast victim.name .. " was killed by " .. killer.name .. " with " .. tostring(killerWeaponName)")
+end)
+```
+
+Incase the killer is nil, you can do this:
+```lua
+EventManager.Listen("ServerPlayer:Killed", function(victim, killer, killerWeaponName)
+    if killer then
+        print(victim.name .. " was killed by " .. killer.name .. " with " .. tostring(killerWeaponName))
+    else
+        print(victim.name .. " died without a valid killer")
+    end
 end)
 ```
 
 ### `ServerPlayer:Spawned`
+Ran when a player spawns. What class they spawned as does not matter.
 ```lua
 EventManager.Listen("ServerPlayer:Spawned", function(player)
-    print(player.name .. " has spawned")
+    print(player.name .. " has spawned") -- Whenever a player spawns it will print this in the console
+    -- You can also Broadcast it as a message so every player knows who spawned
+    -- Console.Execute("Kyber.Broadcast player.name .. " has spawned")
+    -- Kinda useless to print or broadcast that.
 end)
 ```
 
 ### `ServerPlayer:SendMessage`
+Ran every time a player sends a chat message. Cancellable.
 ```lua
 EventManager.Listen("ServerPlayer:SendMessage", function(player, message)
-    print(player.name .. " said: " .. message)
+    print(player.name .. " said: " .. message) -- Whenever a player sends a message it will print this in the console
 end)
 ```
 
-### `Level:Loaded` 
+### `Level:Loaded`
+Ran as soon as a level is loaded.
 ```lua
 EventManager.Listen("Level:Loaded", function(level, mode)
-    print("Level loaded:", level, mode)
+    print("Level loaded:", level, mode) -- Whenever a new level loads it will print the level and mode in the console
 end)
 ```
 
 ### `Level:Complete`
+Ran when a level is done and before the next one starts loading. Generally good for cleanup from last level.
 ```lua
 EventManager.Listen("Level:Complete", function()
-    print("Round over!")
+    print("Round over!") -- Whenever a level ends it will print this in the console
 end)
 ```
 
 ### `ResourceManager:PartitionLoaded`
+Event ran every time an EBX asset is loaded. Expensive as a result.
 ```lua
 EventManager.Listen("ResourceManager:PartitionLoaded", function(partitionName, instance)
     -- logic
@@ -734,22 +904,21 @@ end)
 
 ### `DedicatedServer:PerformanceStatsMessage`
 Message sent every 10s that notifies the server of its performance statistics.
-
 ```lua
 EventManager.Listen("DedicatedServer:PerformanceStatsMessage", function(tps, avgTickTime, worstTickTime)
     -- logic
 end)
 ```
 
-# `ChatFilter:Filter`
-Event runs every time a message is filtered.
+## `ChatFilter:Filter`
+Event ran every time a message is filtered.
 ```lua
 EventManager.Listen("ChatFilter:Filter", function(sender, message, filteredMessage)
     -- logic
 end)
 ```
 
-## Clear
+### Clear
 ```lua
 ChatFilter.Clear() -- Clears all blocked phrases & regex.
 ```
@@ -762,7 +931,7 @@ ChatFilter.ClearBlockedPhrases() -- Clears all blocked phrases.
 ChatFilter.ClearBlockedRegex() -- Clears all blocked regex.
 ```
 
-## Enable/Disable
+### Enable/Disable
 ```lua
 ChatFilter.Enable() -- Enable chat filter filtering messages. Note: Even when disabled, you can still access these table functions.
 ```
@@ -775,7 +944,7 @@ ChatFilter.Disable() -- Disable chat filter filtering messages. Note: Even when 
 ChatFilter.IsEnabled() -- Returns if the chat filter is enabled.
 ```
 
-## Filter
+### Filter
 ```lua
 ChatFilter.AddBlockedPhrase("string") -- Add blocked phrase to chat filter. Filtering of this type is case insensitive. Returns whether the phrase was added to the list or already existed (false)
 ```
@@ -792,7 +961,7 @@ ChatFilter.SetFilterCharacter("string") -- Sets the chat filter's replacement ch
 ChatFilter.GetFilterCharacter() -- Gets the chat filter's replacement character.
 ```
 
-# `Map Rotation`
+## `Map Rotation`
 ```lua
 MapRotation.AddMap(level: string, mode: string): void -- Adds a map entry to the end of the rotation. Raises an error if either level or mode is an empty string.
 ```
@@ -818,14 +987,15 @@ MapRotation.GetCurrentEntryIndex(): integer -- Returns the current index within 
 MapRotation.GetList(): MapRotationEntry -- Returns the full list of map rotation entries.
 ```
 
-# `EntityFactory:Create:[dynamic]`
+## `EntityFactory:Create:[dynamic]`
+Event ran meant to be ran when an entity of a certain type is created. [dynamic] is the EntityData type name of the entity, for example: EntityFactory:Create:SpatialEntityData for SpatialEntitys Note: Experimental, may not be ran for every type
 ```lua
 EventManager.Listen("EntityFactory:Create:[dynamic]", function(entityData)
     -- logic
 end)
 ```
 
-# Client Events
+## Client Events
 >[!WARNING]
 >Client plugins are depreciated as seen [here](https://github.com/ArmchairDevelopers/Kyber/blob/c589c5d221d70da0c23034073351cb64f95341d9/Module/Source/Script/ScriptManager.cpp#L171-L181). Client side events exist in the source, but client plugins are not loaded, so these APIs cannot be used.
 
@@ -837,24 +1007,8 @@ end)
 
 ### `ClientCameraManager:Push(scene)`
 
-## Resource & Entity Events
-`ResourceManager:PartitionLoaded`
-```lua
-EventManager.Listen("ResourceManager:PartitionLoaded", function(partitionName, inst)
-    if inst.typeInfo.name ~= "LayerData" then return end
-    print("Loaded LayerData:", partitionName)
-end)
-```
-
-`EntityFactory:Create:<Name>`
-```lua
-EventManager.Listen("EntityFactory:Create:SoldierEntityData", function(data)
-    print("Soldier entity created")
-end)
-```
-
-# Hook
-## Listening to hooks
+## Hook
+### Listening to hooks
 ```lua
 HookManager.Listen(hookName, object, method)
 ```
@@ -863,17 +1017,17 @@ Example:
 HookManager.Listen("OnWeaponFired", Obj, Obj.OnWeaponFired)
 ```
 
-# PlayerManager
-## Getting a player:
+## PlayerManager
+### Getting a player:
 ```lua
-PlayerManager.GetPlayer(name)
+PlayerManager.GetPlayer(playerName)
 ```
 Example:
 ```lua
 local player = PlayerManager.GetPlayer("The_Negotiator1")
 ```
 
-## Getting all players:
+### Getting all players:
 ```lua
 PlayerManager.GetPlayers()
 ```
@@ -884,17 +1038,16 @@ for _, player in pairs(PlayerManager.GetPlayers()) do
 end
 ```
 
-## Creating a bot:
+### Creating a player:
 ```lua
 PlayerManager.CreatePlayer(name)
 ```
 Example:
 ```lua
-local bot = PlayerManager.CreatePlayer("Bot1")
+local player = PlayerManager.CreatePlayer("Player1") -- Creates a new bot player with the given name.
 ```
 
-# ServerPlayer
-## Methods
+## ServerPlayer
 ### Weapons
 ```lua
 player:SetWeapon("weaponName")
@@ -1120,7 +1273,7 @@ player:SetCooldownModifier(1.2)
 | player.isBot | boolean |
 | player.isAlive | boolean |
 
-# ResourceManager
+## ResourceManager
 ```lua
 ResourceManager.LookupDataContainer(assetName)
 ```
@@ -1129,93 +1282,72 @@ Example:
 local dc = ResourceManager.LookupDataContainer("Weapons/Blaster_E11")
 ```
 
-# Socket
-## Creating a listening server
+## Socket
+### Creating a listening server
 ```lua
 local server = SocketManager.Create(9000)
 ```
 
-## Connecting to a socket
+### Connecting to a socket
 ```lua
 local socket = SocketManager.CreateConnect("127.0.0.1", 9000)
 ```
 >[!IMPORTANT]
 >The URI must be `"127.0.0.1"`. External addresses are not allowed.
 
-## Accepting clients
+### Accepting clients
 Returns `nil` if no client is ready:
 ```lua
 local client = server:Accept()
 ```
 
-## Receiving
+### Receiving
 ```lua
 local msg = client:Recv(1024)
 ```
 
-## Sending
+### Sending
 ```lua
 client:Send("Hi")
 ```
 
-## Closing
+### Closing
 ```lua
 client:Close()
 client:Shutdown()      
 client:ShutdownSend()   
 ```
 
-# Utils
-## Render camera transform
+## Utils
+### Render camera transform
 ```lua
 local t = Utils.GetClientCameraTransform()
 ```
 
-## Active gameplay camera transform
+### Active gameplay camera transform
 ```lua
 Utils.GetActiveCameraTransform(t)
 ```
 
-<!--## Allowed Libraries
-```
-base
-package
-coroutine
-math
-os
-string
-table
-```
-
-## Unavailable functions
-```
-os.execute
-os.exit
-os.remove
-os.rename
-os.setlocale
-os.tmpname
-```-->
-
-# Example Plugins
+## Example Plugins
 
 ***[Example Plugins](https://github.com/ArmchairDevelopers/PluginExamples) provided by the Kyber Developers***
 
-**[Plugins](https://github.com/Thanosss00/Kyber-Plugins) I made**
+**[Plugins](https://github.com/Thanosss00?tab=repositories) I made**
 
-## Print a message
+### Print a message
 ```lua
 print("Hi")
 ```
 
-## Give every player 500 battlepoints when they spawn
+### Give every player 500 battlepoints when they spawn
 ```lua
 EventManager.Listen("ServerPlayer:Spawned", function(player)
     player:SetBattlepoints(500)
 end)
 ```
 
-## Delay actions
+### Delay actions
 You can delay actions by using the `TimerService`, create `common/sdk.lua` and paste this:
 ```lua
 TimerService = {
@@ -1255,7 +1387,7 @@ SetTimeout(function()
 end, 5) -- delays by 5 seconds
 ```
 
-## Broadcast a message
+### Broadcast a message
 ```lua
 local function Broadcast(msg)
     Console.Execute("Kyber.Broadcast " .. msg)
@@ -1273,7 +1405,7 @@ SetTimeout(function()
 end, 5)
 ```
 
-## Define constants
+### Define constants
 ```lua
 -- Light side is 1, Dark is 2
 local TEAM_LIGHT = 1
@@ -1288,7 +1420,7 @@ player:SetHealth(MAX_HEALTH)
 player:SetBattlepoints(STARTING_BP)
 ```
 
-## Count real players
+### Count real players
 ```lua
 local function CountHumans()
     local c = 0
@@ -1299,7 +1431,7 @@ local function CountHumans()
 end
 ```
 
-## Swap team plugin
+### Swap team plugin
 ```lua
 EventManager.Listen("ServerPlayer:SendMessage", function(player, message)
     if message == "!swap" then
@@ -1353,7 +1485,7 @@ EventManager.Listen("ServerPlayer:SendMessage", function(player, message)
 end)
 ```
 
-## Auto Balance Teams
+### Auto Balance Teams
 ```lua
 EventManager.Listen("ServerPlayer:Joined", function(player)
     local players = PlayerManager.GetPlayers()
@@ -1376,7 +1508,7 @@ EventManager.Listen("ServerPlayer:Joined", function(player)
 end)
 ```
 
-## Admin commands
+### Admin commands
 First make an `admins.lua` file (see the example from earlier), then in `__init__.lua`:
 ```lua
 require "admins"
@@ -1403,7 +1535,7 @@ EventManager.Listen("ServerPlayer:SendMessage", function(player, message)
 end)
 ```
 
-## Extract the map name from the full level path
+### Extract the map name from the full level path
 For example: `Levels/MP/DeathStar02_01/DeathStar02_01` → `DeathStar02_01`
 ```lua
 local function ExtractMapName(levelPath)
@@ -1415,7 +1547,7 @@ EventManager.Listen("Level:Loaded", function(level, mode)
 end)
 ```
 
-## StartRound function
+### StartRound function
 ```lua
 require "common/sdk"
 
@@ -1448,7 +1580,7 @@ EventManager.Listen("Level:Loaded", function(level, mode)
 end)
 ```
 
-## EndRound function
+### EndRound function
 Example:
 ```lua
 local function EndRound()
@@ -1460,4 +1592,4 @@ end
 ```
 
 ## Credits
-Kyber Team for the [Official Kyber Docs](https://github.com/ArmchairDevelopers/KyberDocs/tree/feat/plugins-api/content/docs/pluginref) on GitHub and soon on their [website](https://docs.kyber.gg/g/pluginref).
+Kyber Team for the [Official Kyber Docs](https://github.com/ArmchairDevelopers/KyberDocs/tree/feat/plugins-api/content/docs/pluginref) on GitHub and on their [website](https://docs.kyber.gg/g/pluginref).
